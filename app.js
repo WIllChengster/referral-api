@@ -5,21 +5,39 @@ const dotenv = require('dotenv').config({path: './.env'});
 const db = require('./database')
 const app = express();
 
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json()); // for parsing application/json
 
 app.post('/create_link', (req, res) => {
     const { user_id, redirect_url } = req.body;
-    var sql = `
-        INSERT INTO links (user_id, redirect_url)
-        VALUES( ${db.escape(user_id)}, ${db.escape(redirect_url)} )
+    var select_sql = `
+        SELECT * FROM links where USER_ID = ?
     `
-    db.query(sql, (error, results, fields) => {
-        if(err){
-            res.status(400).send(error)
+    db.query(select_sql, [user_id], (error, results) => {
+        if(error){
+            res.status(400).send(error);
+            console.error(error);
         }
-
-        res.send(results);
+        if(results[0]) res.send(
+            JSON.stringify(results[0].redirect_url)
+        )
+        
+        else {
+            var insert_sql = `
+                INSERT INTO links (user_id, redirect_url)
+                VALUES( ${db.escape(user_id)}, ${redirect_url} )
+            `
+            db.query(insert_sql, (error, results, fields) => {
+                if(error){
+                    res.status(400).send(error)
+                    // console.error(error);
+                }
+                console.log(results);
+                res.send(redirect_url);
+            })
+        }
     })
+
 })
 
 app.get('/referral/:user_id', (req, res) => {
