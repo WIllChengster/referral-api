@@ -24,13 +24,14 @@ app.post('/create_link', (req, res) => {
         
         else {
             var insert_sql = `
-                INSERT INTO links (user_id, redirect_url)
-                VALUES( ${db.escape(user_id)}, ${redirect_url} )
+                INSERT INTO links (user_id, redirect_url, referral_url)
+                VALUES( ${db.escape(user_id)}, ${db.escape(redirect_url)}, 
+                        ${process.env.DOMAIN}/referral/${db.escape(user_id)} )
             `
             db.query(insert_sql, (error, results, fields) => {
                 if(error){
                     res.status(400).send(error)
-                    // console.error(error);
+                    console.error(error);
                 }
                 console.log(results);
                 res.send(redirect_url);
