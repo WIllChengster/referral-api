@@ -18,11 +18,11 @@ app.post('/create_link', (req, res) => {
             res.status(400).send(error);
             console.error(error);
         }
-        if(results[0]) res.send(
-            JSON.stringify(results[0].redirect_url)
-        )
-        
-        else {
+        if(!!results[0]){
+            res.send(JSON.stringify(results[0].redirect_url))
+            
+        } else {
+
             var insert_sql = `
                 INSERT INTO links (user_id, redirect_url, referral_url)
                 VALUES( ${db.escape(user_id)}, ${db.escape(redirect_url)}, 
