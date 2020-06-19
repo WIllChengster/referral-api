@@ -56,6 +56,9 @@ app.get('/referral/:user_id', (req, res) => {
     `
     db.query(update_sql, [user_id], (error, insertResults) => {
         db.query(select_sql, [user_id], (error, selectResults) => {
+            if(error){
+                console.error(error);
+            }
             res.redirect(selectResults[0].redirect_url);
         });
     });
@@ -70,6 +73,7 @@ app.get('/referral/conversion/:user_id', (req, res) => {
         WHERE USER_ID = ?
     `
     db.query(update_sql, [user_id], (error, insertResults) => {
+        console.error(error);
         res.status(300).end();
     })
 
