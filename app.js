@@ -21,7 +21,7 @@ app.post('/create_link', (req, res) => {
     const { user_id, redirect_url } = req.body;
     links.findOne({user_id}, (err, link) => {
         if(link){
-            res.send(link)
+            res.send(link.redirect_url)
         } else {
             links.create({
                 user_id,
@@ -32,7 +32,7 @@ app.post('/create_link', (req, res) => {
                     console.error(err);
                     return err;
                 }
-                res.send(link);
+                res.send(link.redirect_url);
             })
         }
     })
