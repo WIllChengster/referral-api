@@ -32,7 +32,7 @@ app.post('/create_link', (req, res) => {
                     console.error(err);
                     return err;
                 }
-                res.send(link.redirect_url);
+                res.send(link.referral_url);
             })
         }
     })
