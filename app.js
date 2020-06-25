@@ -26,7 +26,7 @@ app.post('/create_link', (req, res) => {
             links.create({
                 user_id,
                 redirect_url,
-                referral_url: `${process.env.DOMAIN}/referral/${user_id}`
+                referral_url: `${process.env.DOMAIN}/referral?id=${user_id}`
             }, (err, link) => {
                 if(err){
                     console.error(err);
@@ -40,13 +40,13 @@ app.post('/create_link', (req, res) => {
 })
 
 
-app.get('/referral/:user_id', (req, res) => {
+app.get('/referral/l/:user_id', (req, res) => {
     const { user_id } = req.params;
 
     links.findOne({user_id}, (err, link) => {
         link.clicks += 1;
         link.save( () => {
-            res.end();
+            res.redirect(link.redirect_url);
         } )
     })
 
@@ -59,7 +59,7 @@ app.get('/referral/conversion/:user_id', (req, res) => {
     links.findOne({user_id}, (err, link) => {
         link.conversions += 1;
         links.save( () => {
-            res.redirect(link.redirect_url);
+            res.end();
         })
     })
 
