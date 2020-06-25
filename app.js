@@ -26,7 +26,7 @@ app.post('/create_link', (req, res) => {
             links.create({
                 user_id,
                 redirect_url,
-                referral_url: `${process.env.DOMAIN}/referral?id=${user_id}`
+                referral_url: `${process.env.DOMAIN}/referral/l/${user_id}`
             }, (err, link) => {
                 if(err){
                     console.error(err);
