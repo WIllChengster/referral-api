@@ -59,7 +59,7 @@ app.get('/referral/conversion/:user_id', (req, res) => {
     links.findOne({user_id}, (err, link) => {
         link.conversions += 1;
         links.save( () => {
-            res.end();
+            res.send(link.conversions);
         })
     })
 
